@@ -48,12 +48,13 @@ for(let i=0; i<filesArr.length; i++){
     content+= fileContent+"\r\n";
 }
 
-console.log(content);
+//console.log(content);
 
 let contentArr = content.split("\r\n");
-console.table(contentArr);
+//console.table(contentArr);
 
 // now for command -s (to remove extra space)
+let tempArr = [];
 let isSPresent = optionsArr.includes("-s");
 if (isSPresent) {
     for (let i = 1; i < contentArr.length; i++){
@@ -64,13 +65,67 @@ if (isSPresent) {
             contentArr[i] = null;
         }
     }
-    console.table(contentArr);
-    let tempArr = [];
+    //console.table(contentArr);
+    
     //push everything in tempArr except null
     for (let i = 0; i < contentArr.length; i++){
         if (contentArr[i] != null) {
             tempArr.push(contentArr[i]);
         }
     }
-    console.log("data after removing extra lines\n",tempArr);
+    //console.log("data after removing extra lines\n",tempArr);
 }
+
+contentArr = tempArr;
+
+let indexOfN = optionsArr.indexOf("-n");
+let indexOfB = optionsArr.indexOf("-b");
+//if -n or -b is not found , -1 is returned
+
+let finalOption = "";
+//if both -n and -b are present 
+if (indexOfN != -1 && indexOfB != -1) {
+    if (indexOfN < indexOfB) {
+        finalOption = "-n";
+    }
+    else {
+        finalOption = "-b";
+    }
+}
+//either -n is present or -b is present 
+else {
+    if (indexOfN != -1) {
+        finalOption = "-n";
+    }
+    else if (indexOfB != -1) {
+        finalOption="-b"
+    }
+}
+
+//calling of functions by evaluating finalOption
+if (finalOption == "-n") {
+    modifiyContentByN();
+}
+else if (finalOption == "-b") {
+    modifiyContentByB();
+}
+
+function modifiyContentByN() {
+    for (let i = 0; i < contentArr.length; i++) {
+        contentArr[i] = (i+1) +") " + contentArr[i];
+    }
+}
+
+
+//console.log(contentArr);
+
+function modifiyContentByB() {
+    let count = 1;
+    for (let i = 0; i < contentArr.length; i++) {
+        if (contentArr[i] != "") {
+            contentArr[i] = count + ") " + contentArr[i];
+            count ++;
+        }
+    }
+}
+console.log(contentArr);
